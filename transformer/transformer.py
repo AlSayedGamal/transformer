@@ -1,7 +1,13 @@
 import re
+from collections import namedtuple
 
 
 class Transformer(object):
+    def to_obj(self, template):
+        dict_obj = template
+        return_obj = namedtuple("Object", dict_obj.keys())(*dict_obj.values())
+        return return_obj
+
     def __init__(self, template):
         self.template = template
 
@@ -28,6 +34,8 @@ class Transformer(object):
 
     def __call__(self, source):
         target = dict()
+        if type(source) is dict:
+            source = self.to_obj(source)
         for key in self.template:
             key_formatter = self.template[key]
             matched_placeholders = False
